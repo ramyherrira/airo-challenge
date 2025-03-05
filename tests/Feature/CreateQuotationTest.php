@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\PolicyQuotation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -68,7 +69,7 @@ class CreateQuotationTest extends TestCase
         ]);
     }
 
-    public function test_create_quotation(): void
+    public function test_create_quotation_and_records_row_in_db(): void
     {
         $response = $this->postJson('/api/quotation', [
             'age' => '35,28,40,69',
@@ -77,10 +78,16 @@ class CreateQuotationTest extends TestCase
             'end_date' => '2020-10-30',
         ]);
 
+        $this->assertDatabaseHas(PolicyQuotation::class, [
+            'total' => 270.00,
+            'currency_id' => 'EUR',
+            'start_date' => '2020-10-01',
+            'end_date' => '2020-10-30',
+        ]);
         $response
-            ->assertStatus(200)
+            ->assertStatus(201)
             ->assertJson([
-                'total' => 117.00,
+                'total' => 270.00,
                 'currency_id' => 'EUR',
                 'quotation_id' => 1,
             ]);
