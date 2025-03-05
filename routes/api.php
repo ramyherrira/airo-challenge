@@ -1,15 +1,10 @@
 <?php
 
 use App\Http\Controllers\CreateQuotationController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::post('login', LoginController::class);
 
-// @todo Make this route
-// Route::post('auth', LoginController::class);
-
-Route::post('quotation', CreateQuotationController::class);
-
-
+Route::post('quotation', CreateQuotationController::class)
+    ->middleware(['auth']);

@@ -116,7 +116,7 @@
 </body>
 
 <script>
-    async function sendData(token) {
+    async function sendData() {
         const age = document.querySelector("#age");
         const currency = document.querySelector("#currency");
         const startDate = document.querySelector("#start-date");
@@ -126,7 +126,9 @@
         const quotationId = document.querySelector("#quotation-id");
         const resultedCurrency = document.querySelector("#curr");
         const total = document.querySelector("#total");
-        
+
+        const token = await getToken();
+
         try {
             errorsDiv.innerHTML = "";
             const response = await fetch("/api/quotation", {
@@ -171,17 +173,41 @@
     }
 
     async function getToken() {
-        return '';
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify({
+                    "username": "admin",
+                    "password": "very_secret",
+                }),
+            });
+
+            const json = await response.json();
+
+            console.log('Authentication: ', json);
+
+            if (response.status !== 200) {
+                console.log('Authentication failed');
+
+                return null;
+            }
+
+            return json.token;
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     const form = document.querySelector("#quotation-form");
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const token = getToken();
-
-        sendData(token);
+        sendData();
     });
 </script>
 

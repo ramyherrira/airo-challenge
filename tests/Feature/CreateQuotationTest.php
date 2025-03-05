@@ -3,13 +3,22 @@
 namespace Tests\Feature;
 
 use App\Models\PolicyQuotation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateQuotationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+    }
 
     public function test_create_quotation_fails_when_body_params_is_empty()
     {
